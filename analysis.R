@@ -35,6 +35,10 @@ library(ggplot2)
 # Create a data-frame containing the question number and the number of correct response to each question
 # For the latter we use 'colSums' to calculate the number of correct results.
 df = data.frame( question = seq(1,30), correct = colSums( r[,3:32] ) )
-p3 = ggplot(df, aes(x = question, y = correct)) + geom_col()
+# p3 = ggplot(df, aes(x = question, y = correct)) + geom_col() + ggtitle('Number of correct responses to each question') + xlab('Question #') + ylab('Number Correct')
+p3 = ggplot(df, aes(x = question, y = correct)) + geom_col() + 
+												ggtitle('Number of correct responses to each question') + 
+												scale_x_discrete("Question #", limits=seq(1,30)) +
+												scale_y_discrete("Number Correct", limits=seq(0,25,5))
 
 # Plot the results for Q.1 (bar-plot of answers and indication of the correct result).
