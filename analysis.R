@@ -6,6 +6,9 @@ s <- s[,-1]					# Remove id column because we are about to sort
 s <- s[order(s$rid),]
 rownames(s) <- NULL			# Update the row ids to unscramble them
 
+# Replace the empty responses with NR (No Response)
+s[s == ''] <- 'NR'
+
 # From s create a data-frame r which details whether the response to each question was right or wrong (T or F)
 r <- s[,c("rid", "qid")]
 
