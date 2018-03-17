@@ -3,6 +3,7 @@ a <- read.csv('./data/answers.csv', stringsAsFactors=F)$answer			# Read the answ
 
 # Sort s on the basis of 'rid'
 s <- s[order(s$rid),]
+rownames(s) <- NULL			# Update the row ids to unscramble them
 
 # From s create a data-frame r which details whether the response to each question was right or wrong (T or F)
 r <- s[,c("rid", "qid")]
