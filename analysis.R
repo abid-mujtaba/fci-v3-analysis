@@ -25,6 +25,16 @@ r$tot <- rowSums(r[,3:32])
 library(ggplot2)
 
 # Plot side-by-side histograms of the total scores earned for each qid (type / version mix)
-p <- ggplot(r, aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
+# p <- ggplot(r, aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
+# p2 <- ggplot(r[r$qid == "v2" | r$qid == "v3",], aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
 
-p2 <- ggplot(r[r$qid == "v2" | r$qid == "v3",], aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
+# Plot results for each question.
+
+# On an single plot show the number of correct responses to each question.
+
+# Create a data-frame containing the question number and the number of correct response to each question
+# For the latter we use 'colSums' to calculate the number of correct results.
+df = data.frame( question = seq(1,30), correct = colSums( r[,3:32] ) )
+p3 = ggplot(df, aes(x = question, y = correct)) + geom_col()
+
+# Plot the results for Q.1 (bar-plot of answers and indication of the correct result).
