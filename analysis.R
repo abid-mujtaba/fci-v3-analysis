@@ -40,10 +40,24 @@ library(ggplot2)
 # 												scale_x_discrete("Question #", limits=seq(1,30)) +
 # 												scale_y_discrete("Number Correct", limits=seq(0,25,5))
 
-# Plot the results for Q.1 (bar-plot of answers and indication of the correct result).
-pq1 = ggplot( count( s[,c("q1")] ), aes(x = x, y = freq, fill = x)) + geom_col() +				# Each value of x can have a different fill color
-															ggtitle('Responses to Q.1') +
-															xlab("Response") +
-															ylab("Frequency") + 
-															scale_fill_manual(values = c("grey50", "grey50", "green", "grey50")) +		# Manually specify the fill colors
-															theme(legend.position = "none")		# Remove legend introduced by manual fill
+
+# Function for creating bar plot showing frequency of students who chose a particular response (or NR)
+plot_responses <- function(num, ans) {
+
+	cs = c("grey50", "grey50", "grey50", "grey50", "grey50", "grey50")		# List of colors all the default
+	correct_response = ans[num]
+
+	index = paste("q", num, sep="")
+	data = count( s[,c(index)] )
+
+	# Find index of correct_response and use it to replace the relevant color to "green4" in 'cs' so that the correct response bar becomes green
+
+	p = ggplot(data, aes(x = x, y = freq, fill = x)) + geom_col() +				# Each value of x can have a different fill color
+																ggtitle('Responses to Q.1') +
+																xlab("Response") +
+																ylab("Frequency") + 
+																scale_fill_manual(values = cs) +		# Manually specify the fill colors
+																theme(legend.position = "none")		# Remove legend introduced by manual fill
+
+	return (p)
+}
