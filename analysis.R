@@ -26,6 +26,7 @@ r$tot <- rowSums(r[,3:32])
 
 # Graph data
 library(ggplot2)
+library(plyr)		# for 'count' function
 
 # Plot side-by-side histograms of the total scores earned for each qid (type / version mix)
 # p <- ggplot(r, aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
@@ -49,11 +50,13 @@ plot_responses <- function(num, ans) {
 
 	index = paste("q", num, sep="")
 	data = count( s[,c(index)] )
+	ans_index = match(correct_response, data$x)
+	cs[ans_index] = "green4"		# change color of correct response
 
 	# Find index of correct_response and use it to replace the relevant color to "green4" in 'cs' so that the correct response bar becomes green
 
 	p = ggplot(data, aes(x = x, y = freq, fill = x)) + geom_col() +				# Each value of x can have a different fill color
-																ggtitle('Responses to Q.1') +
+																ggtitle( paste('Responses to Q.', num, sep="") ) +
 																xlab("Response") +
 																ylab("Frequency") + 
 																scale_fill_manual(values = cs) +		# Manually specify the fill colors
