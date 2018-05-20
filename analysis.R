@@ -15,7 +15,7 @@ r <- s[,c("rid", "qid")]
 # Loop over the 30 answers
 for (i in 1:30) {
 
-	key <- paste("q", i, sep="")		# Create the 'q' prefixed column name for the i-th question
+	key <- paste("X", i, sep="")		# Create the 'X' prefixed column name for the i-th question
 	r[[key]] = s[[key]] == a[i]			# Compare the value in s$qi to the actual answer (a[i]) and store it in 'r'
 										# Note the use of [[]] instead of $ (which is a short-hand for [[]]) to access the column of the data-frame when using a variable to hold the column name
 }
