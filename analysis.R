@@ -15,7 +15,7 @@ r <- s[,c("rid", "qid")]
 # Loop over the 30 answers
 for (i in 1:30) {
 
-	key <- paste("X", i, sep="")		# Create the 'X' prefixed column name for the i-th question
+	key <- paste("q", i, sep="")		# Create the 'q' prefixed column name for the i-th question
 	r[[key]] = s[[key]] == a[i]			# Compare the value in s$qi to the actual answer (a[i]) and store it in 'r'
 										# Note the use of [[]] instead of $ (which is a short-hand for [[]]) to access the column of the data-frame when using a variable to hold the column name
 }
@@ -28,18 +28,24 @@ r$tot <- rowSums(r[,3:32])
 library(ggplot2)
 library(plyr)		# for 'count' function
 
-# Plot side-by-side histograms of the total scores earned for each qid (type / version mix)
-# p <- ggplot(r, aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
-# p2 <- ggplot(r[r$qid == "v2" | r$qid == "v3",], aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
 
-# Create a data-frame containing the question number and the number of correct response to each question
-# For the latter we use 'colSums' to calculate the number of correct results.
-# df = data.frame( question = seq(1,30), correct = colSums( r[,3:32] ) )
-# p3 = ggplot(df, aes(x = question, y = correct)) + geom_col() + ggtitle('Number of correct responses to each question') + xlab('Question #') + ylab('Number Correct')
-# p3 = ggplot(df, aes(x = question, y = correct)) + geom_col() + 
-# 												ggtitle('Number of correct responses to each question') + 
-# 												scale_x_discrete("Question #", limits=seq(1,30)) +
-# 												scale_y_discrete("Number Correct", limits=seq(0,25,5))
+# Plot side-by-side histograms of the total scores earned for each qid (type / version mix)
+plot_num_correct <- function(r) {
+
+	# p <- ggplot(r, aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
+	# p2 <- ggplot(r[r$qid == "v2" | r$qid == "v3",], aes(tot, fill=qid)) + geom_histogram(alpha = 0.5, breaks=seq(0,30,by=2), aes(y = ..count..), position ='dodge')
+
+	# Create a data-frame containing the question number and the number of correct response to each question
+	# For the latter we use 'colSums' to calculate the number of correct results.
+	df = data.frame( question = seq(1,30), correct = colSums( r[,3:32] ) )
+	# p3 = ggplot(df, aes(x = question, y = correct)) + geom_col() + ggtitle('Number of correct responses to each question') + xlab('Question #') + ylab('Number Correct')
+	p <- ggplot(df, aes(x = question, y = correct)) + geom_col() + 
+													ggtitle('Number of correct responses to each question') + 
+													scale_x_discrete("Question #", limits=seq(1,30)) +
+													scale_y_discrete("Number Correct", limits=seq(0,25,5))
+
+	return (p)
+}
 
 
 # Function for creating bar plot showing frequency of students who chose a particular response (or NR)
