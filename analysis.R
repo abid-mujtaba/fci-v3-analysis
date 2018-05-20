@@ -1,27 +1,32 @@
-s <- read.csv('./data/sp18-bcs-A.csv', stringsAsFactors=F)
-a <- read.csv('./data/answers.csv', stringsAsFactors=F)$answer			# Read the answers in to a list
+# Calculate whether a response is correct or not based on read in data
+correct_responses <- function(filename, a) {
 
-# Sort s on the basis of 'rid'
-s <- s[,-1]					# Remove id column because we are about to sort
-s <- s[order(s$rid),]
-rownames(s) <- NULL			# Update the row ids to unscramble them
+	s <- read.csv(filename, stringsAsFactors=F)
 
-# Replace the empty responses with NR (No Response)
-s[s == ''] <- 'NR'
+	# Sort s on the basis of 'rid'
+	s <- s[,-1]					# Remove id column because we are about to sort
+	s <- s[order(s$rid),]
+	rownames(s) <- NULL			# Update the row ids to unscramble them
 
-# From s create a data-frame r which details whether the response to each question was right or wrong (T or F)
-r <- s[,c("rid", "qid")]
+	# Replace the empty responses with NR (No Response)
+	s[s == ''] <- 'NR'
 
-# Loop over the 30 answers
-for (i in 1:30) {
+	# From s create a data-frame r which details whether the response to each question was right or wrong (T or F)
+	r <- s[,c("rid", "qid")]
 
-	key <- paste("q", i, sep="")		# Create the 'q' prefixed column name for the i-th question
-	r[[key]] = s[[key]] == a[i]			# Compare the value in s$qi to the actual answer (a[i]) and store it in 'r'
-										# Note the use of [[]] instead of $ (which is a short-hand for [[]]) to access the column of the data-frame when using a variable to hold the column name
+	# Loop over the 30 answers
+	for (i in 1:30) {
+
+		key <- paste("q", i, sep="")		# Create the 'q' prefixed column name for the i-th question
+		r[[key]] = s[[key]] == a[i]			# Compare the value in s$qi to the actual answer (a[i]) and store it in 'r'
+											# Note the use of [[]] instead of $ (which is a short-hand for [[]]) to access the column of the data-frame when using a variable to hold the column name
+	}
+
+	# Calculate the total for each student by summing over the Xi entries (which are columns 3 to 32)
+	r$tot <- rowSums(r[,3:32])		
+
+	return (r)
 }
-
-# Calculate the total for each student by summing over the Xi entries (which are columns 3 to 32)
-r$tot <- rowSums(r[,3:32])		
 
 
 # Graph data
@@ -70,3 +75,9 @@ plot_responses <- function(num, ans) {
 
 	return (p)
 }
+
+
+a <- read.csv('./data/answers.csv', stringsAsFactors=F)$answer			# Read the answers in to a list
+
+r1 <- correct_responses('./data/sp18-bcs-A.csv', a)
+r2 <- correct_responses('./data/sp18-bcs-A-2.csv', a)
